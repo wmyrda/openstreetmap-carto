@@ -2087,67 +2087,114 @@
   }
 }
 
-#trees [zoom >= 16] {
-  ::canopy {
+#trees_poly {
+  [natural = 'tree_row'] {
     opacity: 0.3;
-    [natural = 'tree_row'] {
-      line-color: green;
-      line-cap: round;
-      line-width: 2.5;
-      [zoom >= 17] {
-        line-width: 5;
-      }
-      [zoom >= 18] {
-        line-width: 10;
-      }
-      [zoom >= 19] {
-        line-width: 15;
-      }
-      [zoom >= 20] {
-        line-width: 30;
-      }
+    line-color: green;
+    line-cap: round;
+    line-width: 2.5;
+    [zoom >= 17] { line-width: 5; }
+    [zoom >= 18] { line-width: 10; }
+    [zoom >= 19] { line-width: 15; }
+    [zoom >= 20] { line-width: 30; }
+  }
+}
+
+#trees {
+  [natural = 'tree']::canopy {
+    opacity: 0.3;
+    marker-allow-overlap: true;
+    marker-line-width: 0;
+    marker-ignore-placement: true;
+    marker-fill: green;
+    marker-width: 0;
+    marker-height: 0;
+    [denotation = 'natural_monument'] {
+      marker-fill: #005500;
     }
-    [natural = 'tree'] {
-      marker-fill: green;
-      marker-allow-overlap: true;
-      marker-line-width: 0;
-      marker-width: 2.5;
-      marker-height: 2.5;
-      marker-ignore-placement: true;
-      [zoom >= 17] {
-        marker-width: 5;
-        marker-height: 5;
-      }
-      [zoom >= 18] {
-        marker-width: 10;
-        marker-height: 10;
-      }
-      [zoom >= 19] {
-        marker-width: 15;
-        marker-height: 15;
-      }
-      [zoom >= 20] {
-        marker-width: 30;
-        marker-height: 30;
-      }
+    [zoom >= 14][circumference > 5][height > 30][denotation = 'natural_monument'],
+    [zoom >= 15][circumference > 4][height > 26][denotation = 'natural_monument'] {
+      marker-width: 2;
+      marker-height: 2;
+    }
+    [zoom >= 16] {
+      marker-width: 2.5; marker-height: 2.5;
+      [circumference >= 1] { marker-width: 2.75; marker-height: 2.75; }
+      [circumference >= 2] { marker-width: 3; marker-height: 3; }
+      [circumference >= 3] { marker-width: 3.25; marker-height: 3.25; }
+      [circumference >= 4] { marker-width: 3.5; marker-height: 3.5; }
+      [circumference >= 5] { marker-width: 3.75; marker-height: 3.75; }
+    }
+    [zoom >= 17] {
+      marker-width: 5; marker-height: 5;
+      [circumference >= 1] { marker-width: 5.5; marker-height: 5.5; }
+      [circumference >= 2] { marker-width: 6; marker-height: 6; }
+      [circumference >= 3] { marker-width: 6.5; marker-height: 6.5; }
+      [circumference >= 4] { marker-width: 7; marker-height: 7; }
+      [circumference >= 5] { marker-width: 7.5; marker-height: 7.5; }
+    }
+    [zoom >= 18] {
+      marker-width: 10; marker-height: 10;
+      [circumference >= 1] { marker-width: 11; marker-height: 11; }
+      [circumference >= 2] { marker-width: 12; marker-height: 12; }
+      [circumference >= 3] { marker-width: 13; marker-height: 13; }
+      [circumference >= 4] { marker-width: 14; marker-height: 14; }
+      [circumference >= 5] { marker-width: 15; marker-height: 15; }
+    }
+    [zoom >= 19] {
+      marker-width: 15; marker-height: 15;
+      [circumference >= 1] { marker-width: 16.5; marker-height: 16.5; }
+      [circumference >= 2] { marker-width: 18; marker-height: 18; }
+      [circumference >= 3] { marker-width: 19.5; marker-height: 19.5; }
+      [circumference >= 4] { marker-width: 21; marker-height: 21; }
+      [circumference >= 5] { marker-width: 22.5; marker-height: 22.5; }
+    }
+    [zoom >= 20] {
+      marker-width: 30; marker-height: 30;
+      [circumference >= 1] { marker-width: 33; marker-height: 33; }
+      [circumference >= 2] { marker-width: 36; marker-height: 36; }
+      [circumference >= 3] { marker-width: 39; marker-height: 39; }
+      [circumference >= 4] { marker-width: 42; marker-height: 42; }
+      [circumference >= 5] { marker-width: 45; marker-height: 45; }
     }
   }
   [natural = 'tree']::trunk {
-    [zoom >= 18] {
+    [zoom >= 17] {
       trunk/marker-fill: #b27f36;
       trunk/marker-allow-overlap: true;
       trunk/marker-line-width: 0;
-      trunk/marker-width: 2;
-      trunk/marker-height: 2;
       trunk/marker-ignore-placement: true;
+      trunk/marker-width: 1;
+      trunk/marker-height: 1;
+      [circumference >= 1] { trunk/marker-width: 1.1; trunk/marker-height: 1.1; }
+      [circumference >= 2] { trunk/marker-width: 1.2; trunk/marker-height: 1.2; }
+      [circumference >= 3] { trunk/marker-width: 1.3; trunk/marker-height: 1.3; }
+      [circumference >= 4] { trunk/marker-width: 1.4; trunk/marker-height: 1.4; }
+      [circumference >= 5] { trunk/marker-width: 1.5; trunk/marker-height: 1.5; }
+    }
+    [zoom >= 18] {
+      trunk/marker-width: 2; trunk/marker-height: 2;
+      [circumference >= 1] { trunk/marker-width: 2.2; trunk/marker-height: 2.2; }
+      [circumference >= 2] { trunk/marker-width: 2.4; trunk/marker-height: 2.4; }
+      [circumference >= 3] { trunk/marker-width: 2.6; trunk/marker-height: 2.6; }
+      [circumference >= 4] { trunk/marker-width: 2.8; trunk/marker-height: 2.8; }
+      [circumference >= 5] { trunk/marker-width: 3; trunk/marker-height: 3; }
     }
     [zoom >= 19] {
-      trunk/marker-width: 3;
-      trunk/marker-height: 3;
+      trunk/marker-width: 3; trunk/marker-height: 3;
+      [circumference >= 1] { trunk/marker-width: 3.3; trunk/marker-height: 3.3; }
+      [circumference >= 2] { trunk/marker-width: 3.6; trunk/marker-height: 3.6; }
+      [circumference >= 3] { trunk/marker-width: 3.9; trunk/marker-height: 3.9; }
+      [circumference >= 4] { trunk/marker-width: 4.2; trunk/marker-height: 4.2; }
+      [circumference >= 5] { trunk/marker-width: 4.5; trunk/marker-height: 4.5; }
     }
     [zoom >= 20] {
-      trunk/marker-width: 6;
-      trunk/marker-height: 6;
+      trunk/marker-width: 6; trunk/marker-height: 6;
+      [circumference >= 1] { trunk/marker-width: 6.6; trunk/marker-height: 6.6; }
+      [circumference >= 2] { trunk/marker-width: 7.2; trunk/marker-height: 7.2; }
+      [circumference >= 3] { trunk/marker-width: 7.8; trunk/marker-height: 7.8; }
+      [circumference >= 4] { trunk/marker-width: 8.4; trunk/marker-height: 8.4; }
+      [circumference >= 5] { trunk/marker-width: 9; trunk/marker-height: 9; }
     }
   }
 }
