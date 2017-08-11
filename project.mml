@@ -101,12 +101,12 @@ Layer:
             COALESCE(wetland, landuse, "natural") AS feature
           FROM (SELECT
               way, COALESCE(name, '') AS name, religion,
-              ('landuse_' || (CASE WHEN landuse IN ('forest', 'military', 'farmland') THEN landuse ELSE NULL END)) AS landuse,
+              ('landuse_' || (CASE WHEN landuse IN ('forest', 'military') THEN landuse ELSE NULL END)) AS landuse,
               ('natural_' || (CASE WHEN "natural" IN ('wood', 'sand', 'scree', 'shingle', 'bare_rock') THEN "natural" ELSE NULL END)) AS "natural",
               ('wetland_' || (CASE WHEN "natural" IN ('wetland', 'mud') THEN (CASE WHEN "natural" IN ('mud') THEN "natural" ELSE tags->'wetland' END) ELSE NULL END)) AS wetland,
               way_area/NULLIF(!pixel_width!::real*!pixel_height!::real,0) AS way_pixels
             FROM planet_osm_polygon
-            WHERE (landuse IN ('forest', 'military', 'farmland')
+            WHERE (landuse IN ('forest', 'military')
               OR "natural" IN ('wood', 'wetland', 'mud', 'sand', 'scree', 'shingle', 'bare_rock'))
               AND way_area > 0.01*!pixel_width!::real*!pixel_height!::real
               AND building IS NULL
@@ -145,7 +145,7 @@ Layer:
               ('tourism_' || (CASE WHEN tourism IN ('attraction', 'camp_site', 'caravan_site', 'picnic_site') THEN tourism ELSE NULL END)) AS tourism,
               ('highway_' || (CASE WHEN highway IN ('services', 'rest_area') THEN highway ELSE NULL END)) AS highway,
               ('railway_' || (CASE WHEN railway = 'station' THEN railway ELSE NULL END)) AS railway,
-              CASE WHEN religion IN ('christian', 'jewish', 'muslim') THEN religion ELSE 'INT-generic'::text END AS religion,
+              CASE WHEN religion IN ('christian', 'jewish') THEN religion ELSE 'INT-generic'::text END AS religion,
               way_area/NULLIF(!pixel_width!::real*!pixel_height!::real,0) AS way_pixels
             FROM planet_osm_polygon
             WHERE (landuse IS NOT NULL
@@ -1349,6 +1349,24 @@ Layer:
     properties:
       minzoom: 10
   - id: trees
+    name: trees
+    geometry: point
+    <<: *extents
+    Datasource:
+      <<: *osm2pgsql
+      table: |-
+        (SELECT
+            way, "natural",
+            tags->'denotation' as denotation,
+            tags->'circumference' as circumference,
+            tags->'height' as height
+          FROM planet_osm_point
+          WHERE "natural" = 'tree'
+        ) AS trees
+    properties:
+      minzoom: 14
+  - id: trees-poly
+    name: trees-poly
     geometry: polygon
     <<: *extents
     Datasource:
@@ -1356,16 +1374,9 @@ Layer:
       table: |-
         (SELECT
             way, "natural"
-          FROM planet_osm_point
-          WHERE "natural" = 'tree'
-        UNION ALL
-        SELECT
-            way, "natural"
           FROM planet_osm_line
           WHERE "natural" = 'tree_row'
-        ) AS trees
-    properties:
-      minzoom: 16
+        ) AS trees_poly
   - id: country-names
     class: country
     geometry: point
@@ -1966,7 +1977,7 @@ Layer:
             way,
             way_area/NULLIF(!pixel_width!::real*!pixel_height!::real,0) AS way_pixels,
             COALESCE(
-              'landuse_' || CASE WHEN landuse IN ('forest', 'military', 'farmland') THEN landuse ELSE NULL END,
+              'landuse_' || CASE WHEN landuse IN ('forest', 'military') THEN landuse ELSE NULL END,
               'natural_' || CASE WHEN "natural" IN ('wood', 'glacier', 'sand', 'scree', 'shingle', 'bare_rock') THEN "natural" ELSE NULL END,
               'place_' || CASE WHEN place IN ('island') THEN place ELSE NULL END,
               'boundary_' || CASE WHEN boundary IN ('national_park') THEN boundary ELSE NULL END,
@@ -1975,7 +1986,7 @@ Layer:
             name,
             CASE WHEN building = 'no' OR building IS NULL THEN 'no' ELSE 'yes' END AS is_building -- always no with the where conditions
           FROM planet_osm_polygon
-          WHERE (landuse IN ('forest', 'military', 'farmland')
+          WHERE (landuse IN ('forest', 'military')
               OR "natural" IN ('wood', 'glacier', 'sand', 'scree', 'shingle', 'bare_rock')
               OR "place" IN ('island')
               OR boundary IN ('national_park')
@@ -2042,6 +2053,7 @@ Layer:
             access,
             name,
             tags->'operator' as operator,
+            tags->'denotation' as denotation,
             tags->'icao' as icao,
             tags->'iata' as iata,
             ref,
@@ -2120,6 +2132,7 @@ Layer:
               ELSE NULL
             END AS score,
             operator,
+            denotation,
             icao,
             iata,
             ref,
@@ -2183,6 +2196,7 @@ Layer:
                 END AS elevation,
                 "natural",
                 tags->'operator' as operator,
+                tags->'denotation' as denotation,
                 tags->'icao' as icao,
                 tags->'iata' as iata,
                 ref,
